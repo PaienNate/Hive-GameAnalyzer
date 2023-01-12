@@ -8,14 +8,13 @@ import edu.hebeu.steam.common.page.ColumnFilter;
 import edu.hebeu.steam.common.page.PageRequest;
 import edu.hebeu.steam.common.page.PageResult;
 import edu.hebeu.steam.mapper.UserMapper;
-import edu.hebeu.steam.pojo.SysUser;
+import edu.hebeu.steam.pojo.Sys.SysUser;
 import edu.hebeu.steam.service.UserService;
-import edu.hebeu.steam.util.DESUtil;
-import edu.hebeu.steam.util.MailSenderInfo;
-import edu.hebeu.steam.util.PasswordUtil;
+import edu.hebeu.steam.util.baseutil.DESUtil;
+import edu.hebeu.steam.util.baseutil.MailSenderInfo;
+import edu.hebeu.steam.util.baseutil.PasswordUtil;
 import edu.hebeu.steam.util.SimpleMailSender;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

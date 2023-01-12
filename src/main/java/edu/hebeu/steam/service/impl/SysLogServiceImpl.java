@@ -8,7 +8,7 @@ import edu.hebeu.steam.common.page.ColumnFilter;
 import edu.hebeu.steam.common.page.PageRequest;
 import edu.hebeu.steam.common.page.PageResult;
 import edu.hebeu.steam.mapper.SysLogMapper;
-import edu.hebeu.steam.pojo.SysLog;
+import edu.hebeu.steam.pojo.Sys.SysLog;
 import edu.hebeu.steam.service.SysLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

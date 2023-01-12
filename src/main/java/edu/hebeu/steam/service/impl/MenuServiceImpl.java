@@ -1,12 +1,19 @@
 package edu.hebeu.steam.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.hebeu.steam.mapper.AliMapper;
 import edu.hebeu.steam.mapper.MenuMapper;
+import edu.hebeu.steam.mapper.SysLogMapper;
 import edu.hebeu.steam.mapper.UserMapper;
-import edu.hebeu.steam.pojo.SysMenu;
-import edu.hebeu.steam.pojo.SysUser;
+import edu.hebeu.steam.pojo.viewdata.EvolveFork;
+import edu.hebeu.steam.pojo.Sys.SysLog;
+import edu.hebeu.steam.pojo.Sys.SysMenu;
+import edu.hebeu.steam.pojo.Sys.SysUser;
+import edu.hebeu.steam.pojo.alipay.SysPay;
 import edu.hebeu.steam.service.MenuService;
 import edu.hebeu.steam.service.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +29,55 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements
     private UserService userService;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private SysLogMapper logMapper;
+    @Autowired
+    private AliMapper aliMapper;
+
+
+    @Override
+    public EvolveFork getManageChartData()
+    {
+        EvolveFork fork = new EvolveFork();
+        // fork.getRoomNum();
+        int usercount = userMapper.selectCount(null);
+        int logcount = logMapper.selectCount(null);
+        Date date = DateUtil.lastWeek();
+        QueryWrapper<SysPay> ffmpeg = new QueryWrapper<>();
+        ffmpeg.ge("create_time",DateUtil.formatDate(date)).select("total_amount").isNotNull("total_amount");
+        double price = 0.00;
+        List<String> stringList = new ArrayList<>();
+        for(SysPay syspay:aliMapper.selectList(ffmpeg))
+        {
+            price = price + Double.parseDouble(syspay.getTotalAmount());
+        }
+        stringList.add(price + "元");
+
+        List<SysLog> logList =  logMapper.selectList(null);
+        List<List<String>> stringList2 = new ArrayList<>();
+        for(SysLog log:logList)
+        {
+            List<String> strings = new ArrayList<>();
+            strings.add(DateUtil.formatDateTime(log.getCreateTime()));
+            strings.add(String.valueOf(log.getTime()));
+            stringList2.add(strings);
+        }
+        fork.setPlayerList(stringList);
+        fork.setPlayerNum(logcount);
+        fork.setRoomNum(usercount);
+        fork.setChartData(stringList2);
+        return fork;
+    }
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public List<SysMenu> findByUser(String userName, Wrapper<SysMenu> queryWrapper) {

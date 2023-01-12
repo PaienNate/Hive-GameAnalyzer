@@ -28,6 +28,18 @@
             <artifactId>steam-web-api</artifactId>
             <version>1.4.2</version>
         </dependency>
+        <!-- Sa-Token 整合 Redis （使用 jdk 默认序列化方式） -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-dao-redis</artifactId>
+            <version>1.33.0</version>
+        </dependency>
+        <!-- 提供Redis连接池 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -165,6 +177,12 @@
             <version>4.35.9.ALL</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.11</version>
+        </dependency>
+
         <!-- websocket依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -179,17 +197,17 @@
 
         <!--添加email-->
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.7</version>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
         </dependency>
 
-<!--        &lt;!&ndash; Sa-Token 权限认证，在线文档：https://sa-token.cc &ndash;&gt;
+        <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-spring-boot-starter</artifactId>
             <version>1.33.0</version>
-        </dependency>-->
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

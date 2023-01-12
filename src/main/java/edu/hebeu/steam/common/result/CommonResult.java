@@ -1,5 +1,8 @@
 package edu.hebeu.steam.common.result;
 
+import com.alipay.api.internal.mapping.ApiField;
+import io.swagger.annotations.ApiModel;
+
 /**
  * 通用返回对象
  *
@@ -7,12 +10,16 @@ package edu.hebeu.steam.common.result;
  * @version V1.0
  * @date 2020-07-09 14:18
  */
+@ApiModel(value = "通用返回值")
 public class CommonResult<T> {
     /** 返回码 */
+    @ApiField("返回码")
     private long code;
     /** 返回信息 */
+    @ApiField("返回信息")
     private String msg;
     /** 返回数据 */
+    @ApiField("返回数据")
     private T data;
 
     protected CommonResult() {

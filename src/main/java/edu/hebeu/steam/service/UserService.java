@@ -4,10 +4,9 @@ package edu.hebeu.steam.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import edu.hebeu.steam.common.page.PageRequest;
 import edu.hebeu.steam.common.page.PageResult;
-import edu.hebeu.steam.pojo.SysUser;
+import edu.hebeu.steam.pojo.Sys.SysUser;
 
 import java.util.List;
-import java.util.Set;
 
 public interface UserService extends IService<SysUser> {
 

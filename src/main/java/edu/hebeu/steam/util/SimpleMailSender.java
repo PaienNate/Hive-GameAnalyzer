@@ -1,5 +1,7 @@
 package edu.hebeu.steam.util;
 
+import edu.hebeu.steam.util.baseutil.MailSenderInfo;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;

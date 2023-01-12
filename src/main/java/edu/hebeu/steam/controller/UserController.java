@@ -3,17 +3,16 @@ package edu.hebeu.steam.controller;
 import edu.hebeu.steam.annotation.Log;
 import edu.hebeu.steam.common.page.PageRequest;
 import edu.hebeu.steam.common.result.CommonResult;
-import edu.hebeu.steam.pojo.SysCheckPasswd;
-import edu.hebeu.steam.pojo.SysUser;
+import edu.hebeu.steam.pojo.Sys.SysCheckPasswd;
+import edu.hebeu.steam.pojo.Sys.SysUser;
 import edu.hebeu.steam.service.UserService;
-import edu.hebeu.steam.util.PasswordUtil;
+import edu.hebeu.steam.util.baseutil.PasswordUtil;
 import edu.hebeu.steam.util.XString;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("user")

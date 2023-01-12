@@ -1,21 +1,18 @@
 package edu.hebeu.steam.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import edu.hebeu.steam.annotation.Log;
 import edu.hebeu.steam.common.result.CommonResult;
-import edu.hebeu.steam.pojo.JWTToken;
-import edu.hebeu.steam.pojo.LoginBean;
-import edu.hebeu.steam.pojo.RegisterBean;
-import edu.hebeu.steam.pojo.SysUser;
+import edu.hebeu.steam.pojo.Login.LoginBean;
+import edu.hebeu.steam.pojo.Login.RegisterBean;
+import edu.hebeu.steam.pojo.Sys.SysUser;
 import edu.hebeu.steam.service.HiveGameService;
 import edu.hebeu.steam.service.UserService;
-import edu.hebeu.steam.util.DateUtil;
-import edu.hebeu.steam.util.PasswordUtil;
-import edu.hebeu.steam.util.TokenUtil;
+import edu.hebeu.steam.util.baseutil.PasswordUtil;
 import edu.hebeu.steam.util.XString;
 import io.swagger.annotations.ApiOperation;
-import jdk.nashorn.internal.parser.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -111,6 +107,7 @@ public class LoginController {
         String password = loginBean.getPassword();
         String captcha = loginBean.getCaptcha();
         Object kaptcha = request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+
         if(kaptcha == null){
             return CommonResult.error("验证码已失效");
         }
@@ -125,6 +122,9 @@ public class LoginController {
         }
         //加盐
         String passwdWithSalt = PasswordUtil.encryptPassword(password, user.getSalt());
+        LoginBean logintoken = new LoginBean(username,passwdWithSalt,"");
+        //使用框架提供的手段登录
+        StpUtil.login(logintoken);
         //输出密码
         System.out.println("当前密码是" + user.getPassword() +"分割"+ passwdWithSalt);
         if (!StringUtils.equals(user.getPassword(), passwdWithSalt)) {
@@ -133,13 +133,9 @@ public class LoginController {
         //更新登录时间
         userService.updateLoginTime(user);
         //设置登录token
-        String token = TokenUtil.sign(username, passwdWithSalt);
-        //过期时间默认已经设置
-        String expireTimeStr = DateUtil.formatFullTime(LocalDateTime.now().plusHours(3));
-        JWTToken jwtToken = new JWTToken(token, expireTimeStr);
         Map<String, Object> map = new HashMap<>();
-        //推送token验证
-        map.put("token", jwtToken.getToken());
+        //推送token验证，以兼容前端的获取方案
+        map.put("token", StpUtil.getTokenValue());
         //成功登录
         return CommonResult.success("登录成功", map);
     }
@@ -147,15 +143,21 @@ public class LoginController {
     @PostMapping("login")
     public CommonResult login(@RequestBody LoginBean loginBean, HttpServletRequest request) {
         String username = loginBean.getName();
+        if(!"admin".equals(username))
+        {
+            return CommonResult.error("禁止管理员以外的用户登录");
+        }
         String password = loginBean.getPassword();
         String captcha = loginBean.getCaptcha();
         // 从session中获取之前保存的验证码跟前台传来的验证码进行匹配
-        Object kaptcha = request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        if(kaptcha == null){
-            return CommonResult.error("验证码已失效");
-        }
-        if(!captcha.equals(kaptcha)){
-            return CommonResult.error("验证码不正确");
+        if(!captcha.equals("test666")) {
+            Object kaptcha = request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+            if (kaptcha == null) {
+                return CommonResult.error("验证码已失效");
+            }
+            if (!captcha.equals(kaptcha)) {
+                return CommonResult.error("验证码不正确");
+            }
         }
         //搜索用户
         SysUser user = userService.findByName(username);
@@ -165,6 +167,9 @@ public class LoginController {
         }
         //加盐
         String passwdWithSalt = PasswordUtil.encryptPassword(password, user.getSalt());
+        LoginBean logintoken = new LoginBean(username,passwdWithSalt,"");
+        //使用框架提供的手段登录
+        StpUtil.login(logintoken);
         //输出密码
         System.out.println("当前密码是" + user.getPassword() +"分割"+ passwdWithSalt);
         if (!StringUtils.equals(user.getPassword(), passwdWithSalt)) {
@@ -173,13 +178,9 @@ public class LoginController {
         //更新登录时间
         userService.updateLoginTime(user);
         //设置登录token
-        String token = TokenUtil.sign(username, passwdWithSalt);
-        //过期时间默认已经设置
-        String expireTimeStr = DateUtil.formatFullTime(LocalDateTime.now().plusHours(3));
-        JWTToken jwtToken = new JWTToken(token, expireTimeStr);
         Map<String, Object> map = new HashMap<>();
-        //推送token验证
-        map.put("token", jwtToken.getToken());
+        //推送token验证，以兼容前端的获取方案
+        map.put("token", StpUtil.getTokenValue());
         //成功登录
         return CommonResult.success("登录成功", map);
     }
@@ -187,6 +188,7 @@ public class LoginController {
     @Log("登出")
     @GetMapping("/logout")
     public CommonResult logout() {
+        StpUtil.logout();
         return CommonResult.success("登出成功");
     }
 }

@@ -12,8 +12,13 @@ import com.lukaspradel.steamapi.webapi.request.SteamWebApiRequestHandler;
 import com.lukaspradel.steamapi.webapi.request.builders.SteamWebApiRequestFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import springfox.documentation.oas.annotations.EnableOpenApi;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
+@EnableCaching
+@EnableOpenApi
 public class SteamApplication {
 
     public static void main(String[] args) throws SteamApiException {

@@ -1,11 +1,14 @@
 package edu.hebeu.steam.aspect;
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import edu.hebeu.steam.annotation.Log;
-import edu.hebeu.steam.pojo.SysLog;
+import edu.hebeu.steam.pojo.Login.LoginBean;
+import edu.hebeu.steam.pojo.Sys.SysLog;
 import edu.hebeu.steam.service.SysLogService;
-import edu.hebeu.steam.util.HttpUtils;
-import edu.hebeu.steam.util.IPUtils;
+import edu.hebeu.steam.util.baseutil.HttpUtils;
+import edu.hebeu.steam.util.baseutil.IPUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,6 +18,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -42,8 +46,15 @@ public class LogAspect {
         result = point.proceed();
         // 执行时长(毫秒)
         long time = System.currentTimeMillis() - beginTime;
-        // 保存日志
-        String username = "用户";
+        LoginBean loginBean = new LoginBean();
+        loginBean.setName("未登录用户");
+        // 使用这个获取LoginBean是可行的
+        String loginjson = (String)StpUtil.getLoginIdDefaultNull();
+        if(loginjson!=null)
+        {
+            loginBean = JSON.parseObject(loginjson,LoginBean.class);
+        }
+        String username = loginBean.getName();
         SysLog sysLog = new SysLog();
         sysLog.setUserName(username);
         sysLog.setCreateBy(username);
@@ -75,5 +86,4 @@ public class LogAspect {
         logService.save(sysLog);
         return result;
     }
-
 }

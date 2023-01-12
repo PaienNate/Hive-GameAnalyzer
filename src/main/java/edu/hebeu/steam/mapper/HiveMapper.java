@@ -2,11 +2,11 @@ package edu.hebeu.steam.mapper;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import edu.hebeu.steam.pojo.HiveGame;
-import edu.hebeu.steam.viewdata.Base2Pojo;
-import edu.hebeu.steam.viewdata.DeveloperTable;
-import edu.hebeu.steam.viewdata.MostOwnerGamePojo;
-import org.apache.ibatis.annotations.Insert;
+import edu.hebeu.steam.pojo.hive.HiveGame;
+import edu.hebeu.steam.pojo.viewdata.Base2Pojo;
+import edu.hebeu.steam.pojo.viewdata.DeveloperTable;
+import edu.hebeu.steam.pojo.viewdata.LanguageCompare;
+import edu.hebeu.steam.pojo.viewdata.MostOwnerGamePojo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -33,4 +33,19 @@ public interface HiveMapper extends BaseMapper<HiveGame> {
 
     @Select("select DISTINCT * from genre where gen='${gen}' order by positive desc limit 20;")
     public List<DeveloperTable> getGenreDetail(@Param("gen")String genre);
+
+    @Select("select * from cloud;")
+    public List<Base2Pojo> getWordCount();
+
+    @Select("select * from language;")
+    public List<LanguageCompare> getLanguageCompare();
+
+    @Select("SELECT name, value FROM default.positives where appid='${appid}';")
+    public List<Base2Pojo> getDropPicForPositive(@Param(value="appid")int appid);
+
+    @Select("select `appid`,`name`,`value` from median order by a desc limit ${num};")
+    public List<MostOwnerGamePojo> getMostMedianGame(@Param("num")String num);
+
+
+
 }

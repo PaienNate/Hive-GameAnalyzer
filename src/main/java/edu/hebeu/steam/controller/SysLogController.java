@@ -16,6 +16,8 @@ public class SysLogController {
     @Autowired
     private SysLogService sysLogService;
 
+
+
     @PostMapping(value="/findPage")
     public CommonResult findPage(@RequestBody PageRequest pageRequest) {
         return CommonResult.success(sysLogService.findPage(pageRequest));
