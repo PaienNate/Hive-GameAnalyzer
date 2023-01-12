@@ -140,12 +140,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         try
         {
             MailSenderInfo mailInfo = new MailSenderInfo();
-            mailInfo.setMailServerHost("smtp.163.com");
+            mailInfo.setMailServerHost("*****.163.com");
             mailInfo.setMailServerPort("25");
             mailInfo.setValidate(true);
-            mailInfo.setUserName("firehomework@163.com");
-            mailInfo.setPassword("DHVTIYMUHSVDCKOX");//您的邮箱密码
-            mailInfo.setFromAddress("firehomework@163.com");
+            mailInfo.setUserName("********@163.com");
+            mailInfo.setPassword("********");//您的邮箱密码
+            mailInfo.setFromAddress("********@163.com");
             mailInfo.setToAddress(userEmail);
             mailInfo.setSubject("找回密码");
             mailInfo.setContent("您好！请在两小时内，填写该验证码，进行密码重置" + "\n" + link );

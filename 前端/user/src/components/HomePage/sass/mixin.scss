@@ -1,0 +1,250 @@
+@mixin transform($t) {
+  -webkit-transform: $t;
+  transform: $t;
+}
+
+@mixin transform-origin($to) {
+  -webkit-transform-origin: $to;
+  transform-origin: $to;
+}
+
+@mixin transition($value) {
+  -webkit-transition: $value;
+}
+
+@mixin hairline-top($color) {
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: auto;
+    right: auto;
+    height: 2px;
+    width: 100%;
+    background-color: transparent;
+    border-top: 1px solid $color;
+    display: block;
+    z-index: 15;
+  }
+}
+
+@mixin hairline-left($color) {
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: auto;
+    right: auto;
+    width: 1px;
+    height: 100%;
+    background-color: $color;
+    display: block;
+    z-index: 15;
+    @include transform-origin(0% 50%);
+    html.pixel-ratio-2 & {
+      @include transform(scaleX(0.5));
+    }
+    html.pixel-ratio-3 & {
+      @include transform(scaleX(0.33));
+    }
+    html.pixel-ratio-4 & {
+      @include transform(scaleX(0.25));
+    }
+  }
+}
+
+@mixin hairline-bottom($color, $left:0) {
+  &:after {
+    content: '';
+    position: absolute;
+    left: $left;
+    bottom: 0;
+    right: auto;
+    top: auto;
+    height: 2px;
+    width: 100%;
+    background-color: transparent;
+    border-bottom: 1px solid $color;
+    display: block;
+    z-index: 15;
+  }
+}
+
+@mixin hairline-right($color) {
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    left: auto;
+    bottom: auto;
+    width: 1px;
+    height: 100%;
+    background-color: $color;
+    display: block;
+    z-index: 15;
+  }
+}
+
+// For right and bottom
+.hairline-remove-right-bottom {
+  &:after {
+    display: none,
+  }
+}
+
+// For left and top
+.hairline-remove-left-top {
+  &:before {
+    display: none,
+  }
+}
+
+// Encoded SVG Background
+@mixin encoded-svg-background($svg) {
+  $url: encodeURIComponent(#{$svg});
+  background-image: url("data:image/svg+xml;charset=utf-8,#{$url}");
+}
+
+@mixin align-self($as) {
+  -ms-flex-item-align: $as;
+  -webkit-align-self: $as;
+  align-self: $as;
+}
+
+@mixin ellipsis() {
+  width: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin backgroundSize($width,$height) {
+  -webkit-background-size: $width $height;
+}
+
+@mixin display-box() {
+  display: flex;
+}
+
+@mixin flex-direction($direction: row) {
+  flex-direction: $direction;
+}
+
+@mixin flex-wrap($wrap: nowrap) {
+  flex-wrap: $wrap;
+}
+
+@mixin flex-justify($justify: flex-start) {
+  justify-content: $justify;
+}
+
+@mixin box-align($align: center) {
+  align-items: $align;
+}
+
+@mixin box-align-content($alignContent: stretch) {
+  align-content: $alignContent;
+}
+
+@mixin box-flex($scale: 1) {
+  flex: $scale;
+}
+
+@mixin border-radius($radius: 0) {
+  border-top-left-radius: $radius;
+  border-top-right-radius: $radius;
+  border-bottom-left-radius: $radius;
+  border-bottom-right-radius: $radius;
+  -webkit-background-clip: padding-box;
+}
+
+@mixin background($start: #ffffff, $end: #000000) {
+  background: $end;
+  background-image: -webkit-gradient(linear, left top, left bottom, from($start), to($end)); /* Saf4+, Chrome */
+  background-image: linear-gradient($start, $end);
+}
+
+@mixin border-1px-bottom($color: #d2d2d2) {
+  background: left bottom repeat-x;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(.5, transparent), color-stop(.5, $color), to($color));
+  background-image: linear-gradient(left top, left bottom, color-stop(.5, transparent), color-stop(.5, $color), to($color));
+  -webkit-background-size: 100% 1px;
+  background-size: 100% 1px;
+}
+
+@mixin border-1px-top($color: #d2d2d2) {
+  background: left top repeat-x;
+  background-image: -webkit-gradient(linear, left top, left bottom, from($color), color-stop(.5, $color), color-stop(.5, transparent));
+  background-image: linear-gradient(left top, left bottom, from($color), color-stop(.5, $color), color-stop(.5, transparent));
+  -webkit-background-size: 100% 1px;
+  background-size: 100% 1px;
+}
+
+@mixin border-1px-both($color: #d2d2d2) {
+  background-position: left top, left bottom;
+  background-repeat: repeat-x, repeat-x;
+  background-image: -webkit-gradient(linear, left top, left bottom, from($color), color-stop(.5, $color), color-stop(.5, transparent)), -webkit-gradient(linear, left top, left bottom, color-stop(.5, transparent), color-stop(.5, $color), to($color));
+  background-image: linear-gradient(left top, left bottom, from($color), color-stop(.5, $color), color-stop(.5, transparent)), linear-gradient(left top, left bottom, color-stop(.5, transparent), color-stop(.5, $color), to($color));
+  -webkit-background-size: 100% 1px, 100% 1px;
+  background-size: 100% 1px, 100% 1px;
+}
+
+@mixin border-1px-scale($color: #d2d2d2) {
+  position: relative;
+  &:before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0px;
+    right: 0px;
+    border-bottom: 1px solid $color;
+    -webkit-transform: scaleY(.5);
+    -webkit-transform-origin: 0px 0px;
+  }
+}
+
+@mixin box-sizing($sizing: border-box) {
+  -webkit-box-sizing: $sizing;
+}
+
+@mixin box-shadow($value) {
+  -webkit-box-shadow: $value;
+}
+
+@mixin box-shadow($value1, $value2) {
+  -webkit-box-shadow: $value1, $value2;
+}
+
+@mixin ellipsis($w:auto) {
+  width: $w;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+}
+
+@mixin float-clear() {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0px;
+    content: ' ';
+    clear: both;
+    height: 0px;
+  }
+}
+
+@mixin cursor() {
+  cursor: pointer;
+}
+
+@mixin overflow-scroll() {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+$colorMain: #6ac2b6;
+$prefix: zui;

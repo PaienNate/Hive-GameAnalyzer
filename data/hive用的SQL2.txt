@@ -1,0 +1,56 @@
+g3 tag
+g4 gen
+g5 word
+
+
+SELECT
+    cate,
+    videoid,
+    views
+FROM
+    (SELECT
+         cate,
+         videoid,
+         views,
+    RANK() OVER(PARTITION BY cate 
+    ORDER BY views DESC) hot
+FROM
+    video_category)t1
+WHERE
+    hot <= 10;
+
+owner
+appid,name,average_forever
+SELECT distinct cast(regexp_replace(split(owners,' .. ')[0],'\n|\r|\t|,','') AS BIGINT) a
+FROM default.gamedata2 order by a desc;
+create table owner
+as SELECT distinct cast(regexp_replace(split(owners,' .. ')[0],'\n|\r|\t|,','') AS BIGINT) a,appid,name,average_forever value 
+FROM default.gamedata2 order by a desc;
+
+create table cloud
+as select tag name,n value from ciyun;
+
+两个表19
+tags 词云20
+最受欢迎/不欢迎gen 饼 22
+lan 柱子 23
+好评 水滴 24
+create table positives
+as select *,positive/(positive+negative) value from gamedata;
+
+
+create table devAndpo
+as select *,positive/(positive+negative) value from developer
+游戏信息 表 25
+开发商相关游戏表26
+select * from developer where developer="developer";
+开发商评价 27
+owner，initialprice，average_forever,positive,ccu，（positivemax，poname），(ccumax,ccuname)\
+select distinct dev,CONCAT_WS(",",collect_set(name)) as name,avg(owner) owner,avg(initialprice) price,avg(average_forever) avg_time,avg(value) avg_positive from devandpo;
+该开发商，在2021年共制作了11111款游戏，其中平均每款游戏
+owner，average_forever，ccu，最擅长做这个的
+类别评价：
+
+（查询游戏近况 28）
+
+select distinct dev,CONCAT_WS(",",collect_set(name)) as name,avg(initialprice)/100 price,avg(average_forever) avg_time,avg(value) avg_positive from devAndpo group by dev;
