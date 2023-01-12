@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.hebeu.steam.common.forest.Proxy;
 import edu.hebeu.steam.mapper.*;
 import edu.hebeu.steam.pojo.Base.Data;
 import edu.hebeu.steam.pojo.Base2PojoExtend;
@@ -46,7 +47,11 @@ public class HiveGameServiceImpl extends ServiceImpl<HiveMapper, HiveGame> imple
                 double a = 1.0 * now/count * 100;
                 System.out.println("当前处理的APPID为" + data.getAppid() + "完成进度为" + a + "%");
                 System.out.println("处理了共计" + now + "条数据！");
-                GameData map = myClient.getSteamSpyData(data.getAppid());
+                Proxy proxy = myClient.getProxy();
+                String proxyip = proxy.getProxyIp();
+                String proxyport = proxy.getProxyport();
+                System.out.println("当前的proxy状态" + proxy);
+                GameData map = myClient.getSteamSpyData_proxy(proxyip,proxyport,data.getAppid());
                 //GameData map = myClient.getSteamSpyData(String.valueOf(417360));
                 //判断是否需要输入空
                 boolean isJsonObject = false;

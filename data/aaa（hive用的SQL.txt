@@ -1,0 +1,165 @@
+炸开建新表
+create table genre
+as select
+ *
+from
+    gamedata2
+Lateral view explode(split(genre,', ')) tem as gen;
+
+create table genre
+as select
+ *
+from
+    gamedata2
+Lateral view explode(split(genre,', ')) tem as gen;
+
+create table languages
+as select
+ *
+from
+    gamedata2
+Lateral view explode(split(languages,', ')) tem as word;
+
+create table developer
+as select
+ *
+from
+    gamedata2
+Lateral view explode(split(developer,', ')) tem as dev;
+
+create table genreAndvalue
+as select gen name,count(appid) value from genre group by gen order by value desc limit 10;
+
+create table owner
+as SELECT distinct cast(regexp_replace(split(owners,' .. ')[0],'\n|\r|\t|,','') AS BIGINT) a,appid,name,average_forever value 
+FROM default.gamedata2 order by a desc;
+
+create table median
+as SELECT distinct cast(regexp_replace(split(owners,' .. ')[0],'\n|\r|\t|,','') AS BIGINT) a,appid,name,median_forever value 
+FROM default.gamedata2 order by a desc;
+
+create table bad_genreAndvalue
+as select gen name,count(appid) value from genre group by gen order by value limit 10;
+
+select developer,avg(price),count(name) from developer group by developer limit 10;
+
+create table languages2020
+as select distinct
+ *
+from
+    gamedata2
+Lateral view explode(split(languages,', ')) tem as word;
+
+create table language
+as select a.*,b.value1 value1
+from (select word,count(appid)/9455 value0
+from
+    languages2020 group by word order by count(appid) desc) a,
+(select word,count(appid)/10265 value1
+from
+    languages group by word) b
+where b.word=a.word;
+
+regexp_extract(count(appid)/9455,'([0-9]*.[0-9][0-9])',1)
+
+select word,aount(appid) value0
+from
+    languages group by word
+找出来开发游戏前十的公司（散点图
+（找出来价格最高的十个游戏
+select name,initialprice from gamedata2 order by initialprice desc limit 10;）
+select developer,count(appid) n from gamedata2 group by developer order by n desc limit 10;
+
+*****找出来折扣最高的十个游戏
+select name,discount from gamedata2 order by discount limit 10;
+
+找出来默认类别最高的十种类别
+select tag,count(appid) n from g3 group by tag order by n desc limit 10;
+
+找出来玩家最喜欢的类别（词云
+
+***玩家拥有量最多的游戏所属类别（饼图
+select tag,count(appid) n from g3 group by tag order by n desc limit 10;
+
+游戏包含最多的语言
+select word,count(appid) n from g5 group by word order by n desc limit 5;
+
+中文占比量
+
+
+玩家拥有量最低的五种类别（饼图
+select tag,count(appid) n from g3 group by developer order by n limit 5;
+
+同时在线人数最高
+
+
+各类价格占比量(柱状图
+
+
+平均游戏时长（用户黏度
+
+
+游戏时长中位数（
+select dev,max(value) from devAndpo where dev!=('')group by dev;
+
+select distinct dev,CONCAT_WS(",",collect_set(name)) as name,avg(cast(regexp_replace(split(owners,' .. ')[0],'\n|\r|\t|,','') AS BIGINT)) owner,avg(initialprice)/100 price,avg(average_forever) avg_time,avg(value) avg_positive from devAndpo group by dev;
+
+select t.dev,devAndpo.name,t.value
+from devAndpo,(select dev,max(value) value from devAndpo where dev!=('')group by dev) t
+where t.dev=devAndpo.dev and t.value=devAndpo.value;
+
+select e.dev,devAndpo.name,e.value
+from devAndpo,(select dev,max(ccu) value from devAndpo where dev!=('')group by dev) e
+where e.dev=devAndpo.dev and e.value=devAndpo.value;
+
+select  a.*,b.name poname,b.value povalue
+from(
+select distinct dev,CONCAT_WS(",",collect_set(name)) as name,avg(cast(regexp_replace(split(owners,' .. ')[0],'\n|\r|\t|,','') AS BIGINT)) owner,avg(initialprice)/100 price,avg(average_forever) avg_time,avg(value) avg_positive from devAndpo where dev!=('') group by dev
+) a
+join 
+(select t.dev,devAndpo.name,t.value
+from devAndpo,(select dev,max(value) value from devAndpo where dev!=('')group by dev) t
+where t.dev=devAndpo.dev and t.value=devAndpo.value) b
+on a.dev=b.dev;
+
+select  c.*,d.name ccuname,d.value ccuvalue
+from(
+select  a.*,b.name poname,b.value povalue
+from(
+select distinct dev,CONCAT_WS(",",collect_set(name)) as name,avg(cast(regexp_replace(split(owners,' .. ')[0],'\n|\r|\t|,','') AS BIGINT)) owner,avg(initialprice)/100 price,avg(average_forever) avg_time,avg(value) avg_positive from devAndpo where dev!=('') group by dev
+) a
+join 
+(select t.dev,devAndpo.name,t.value
+from devAndpo,(select dev,max(value) value from devAndpo where dev!=('')group by dev) t
+where t.dev=devAndpo.dev and t.value=devAndpo.value) b
+on a.dev=b.dev
+) c
+join 
+(select e.dev,devAndpo.name,e.value
+from devAndpo,(select dev,max(ccu) value from devAndpo where dev!=('')group by dev) e
+where e.dev=devAndpo.dev and e.value=devAndpo.value) d
+on c.dev=d.dev;
+
+create table dev_evaluate
+as select  c.*,d.name ccuname,d.value ccuvalue
+from(
+select  a.*,b.name poname,b.value povalue
+from(
+select distinct dev,CONCAT_WS(",",collect_set(name)) as name,avg(cast(regexp_replace(split(owners,' .. ')[0],'\n|\r|\t|,','') AS BIGINT)) owner,avg(initialprice)/100 price,avg(average_forever) avg_time,avg(value) avg_positive from devAndpo where dev!=('') group by dev
+) a
+join 
+(select t.dev,devAndpo.name,t.value
+from devAndpo,(select dev,max(value) value from devAndpo where dev!=('')group by dev) t
+where t.dev=devAndpo.dev and t.value=devAndpo.value) b
+on a.dev=b.dev
+) c
+join 
+(select e.dev,devAndpo.name,e.value
+from devAndpo,(select dev,max(ccu) value from devAndpo where dev!=('')group by dev) e
+where e.dev=devAndpo.dev and e.value=devAndpo.ccu) d
+on c.dev=d.dev;
+发行商总数//发行商
+
+select distinct dev,CONCAT_WS(","collect_set(name)) as name from dev group by dev limit 10;
+
+select distinct dev,CONCAT_WS(",",collect_set(name)) as name,(select value,name poname from postives group by d from developer where dev!=('') group by dev limit 10;
